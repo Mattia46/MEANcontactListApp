@@ -5,12 +5,11 @@ var app = express();
 var mongojs = require('mongojs');
 var db = mongojs('contactlist', ['contactlist']);
 
+//added npm install doby-parse
 var bodyParser =  require('body-parser');
-
+app.use(bodyParser.json());
 
 app.use(express.static(__dirname + "/public"));
-
-app.use(bodyParser.json());
 
 app.get('/contactlist', function(req, res) {
   console.log("I received the GET request");
@@ -27,6 +26,14 @@ app.post('/contactlist', function(req, res) {
     res.json(doc);
   });
 
+});
+
+app.delete('/contactlist/:id', function(req, res) {
+  var id = req.params.id;
+  console.log(id);
+  db.contactlist.remove({_id: mongojs.ObjectId(id)}, function(err, doc) {
+    res.json(doc);
+  });
 });
 
 app.listen(3000);
